@@ -10,3 +10,13 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/bin/
+/.classpath
+/.gradle/2.2.1/taskArtifacts/cache.properties
+/.gradle/2.2.1/taskArtifacts/cache.properties.lock
+/.gradle/2.2.1/taskArtifacts/fileHashes.bin
+/.project
+/.settings/org.eclipse.jdt.core.prefs
+/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin
+/.gradle/2.2.1/taskArtifacts/outputFileStates.bin
+/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin
