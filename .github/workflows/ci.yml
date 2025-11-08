@@ -21,8 +21,15 @@ jobs:
           java-version: '21'
           cache: 'gradle'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+      - name: Normalize `gradlew` line endings and grant execute permission
+        run: |
+          # Remove any CRLF windows line endings that can break the shell on Unix runners
+          if [ -f ./gradlew ]; then
+            sed -i 's/\r$//' ./gradlew || true
+            chmod +x ./gradlew || true
+          else
+            echo "Warning: ./gradlew not found"
+          fi
 
       - name: Show Java and Gradle info (debuggable)
         run: |
