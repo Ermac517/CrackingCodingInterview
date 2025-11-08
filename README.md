@@ -30,3 +30,15 @@ Notes:
 
 - CI runs the same `./gradlew clean build` on each push/PR using JDK 21.
 - If you encounter JVM path issues, make sure `JAVA_HOME` points at a JDK installation directory (e.g., `/usr/lib/jvm/<jdk>` on Linux).
+
+Formatting enforcement:
+
+- The repository CI enforces code formatting using Spotless (`google-java-format`). The CI workflow runs `./gradlew spotlessCheck` before the build; if formatting fails the job will print guidance and fail.
+- To fix formatting locally, run:
+
+```bash
+./gradlew spotlessApply
+git add -A
+git commit -m "Apply Spotless formatting"
+```
+

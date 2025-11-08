@@ -29,5 +29,19 @@ jobs:
           java -version
           ./gradlew --version
 
+      - name: Check formatting (Spotless)
+        id: spotless
+        continue-on-error: true
+        run: ./gradlew spotlessCheck --no-daemon || true
+
+      - name: Spotless failure message
+        if: ${{ steps.spotless.outcome != 'success' }}
+        run: |
+          echo "ERROR: Code formatting check failed (spotlessCheck)."
+          echo "Run './gradlew spotlessApply' locally to auto-format the code, then commit the changes and push again."
+          echo "You can also run: './gradlew spotlessCheck' to see details."
+          exit 1
+
       - name: Build (Gradle wrapper)
+        if: ${{ steps.spotless.outcome == 'success' }}
         run: ./gradlew clean build --no-daemon
