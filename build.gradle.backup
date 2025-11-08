@@ -30,4 +30,11 @@ test {
     useJUnitPlatform()
 }
 
-// (Removed legacy `uploadArchives` block — not supported by modern Gradle versions.)
+// If the repo uploads archives locally in `repos/`, preserve that configuration
+uploadArchives {
+    repositories {
+        flatDir {
+            dirs 'repos'
+        }
+    }
+}
