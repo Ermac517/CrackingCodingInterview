@@ -24,10 +24,36 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Show Java and Gradle info
+      - name: Show Java and Gradle info (debuggable)
         run: |
-          java -version
-          ./gradlew --version
+          echo "JAVA_HOME=${JAVA_HOME}"
+          echo "Which java: $(which java || echo 'not found')"
+          echo
+          echo "java -version output:"
+          java -version || true
+
+          echo
+          echo "gradlew permissions and head of file:"
+          ls -la ./gradlew || true
+          head -n 20 ./gradlew || true
+
+          echo
+          echo "gradle/wrapper contents:"
+          ls -la gradle/wrapper || true
+          echo
+          echo "Attempting to run './gradlew --version' (will print diagnostics on failure)"
+          if ./gradlew --version; then
+            echo "gradlew --version succeeded"
+          else
+            echo "gradlew --version failed — dumping helpful diagnostics"
+            echo
+            echo "Environment variables:"; env
+            echo
+            echo "Contents of gradle/wrapper/gradle-wrapper.properties:"; cat gradle/wrapper/gradle-wrapper.properties || true
+            echo
+            echo "Listing gradle/wrapper:"; ls -la gradle/wrapper || true
+            exit 1
+          fi
 
       - name: Check formatting (Spotless)
         id: spotless
