@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'eclipse'
+    id 'com.diffplug.spotless' version '6.23.0'
 }
 
 // Project version
@@ -28,6 +29,21 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// Code formatting using Spotless with Google Java Format
+spotless {
+    java {
+        // Target all Java source files in the standard layout
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+
+        // Use Google Java Format. Version must be recent enough for JVM 21.
+        googleJavaFormat('1.21.0')
+
+        // Optionally trim trailing whitespace and ensure newline at end of file
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 // (Removed legacy `uploadArchives` block — not supported by modern Gradle versions.)
