@@ -43,8 +43,15 @@ jobs:
           else
             echo "gradle-wrapper.jar missing — downloading Gradle ${DVER} distribution to extract wrapper jars"
             curl -fSL "$DURL" -o /tmp/gradle-${DVER}.zip
-            # Extract the wrapper plugin jar as gradle-wrapper.jar
-            unzip -p /tmp/gradle-${DVER}.zip "gradle-${DVER}/lib/plugins/gradle-wrapper-${DVER}.jar" > ${WRAPPER_DIR}/gradle-wrapper.jar || true
+            # Extract the wrapper plugin jar resource (it embeds gradle-wrapper.jar) correctly
+            unzip -p /tmp/gradle-${DVER}.zip "gradle-${DVER}/lib/plugins/gradle-wrapper-${DVER}.jar" > /tmp/gradle-plugin-${DVER}.jar || true
+            # The plugin JAR contains an embedded gradle-wrapper.jar resource; extract it
+            if unzip -l /tmp/gradle-plugin-${DVER}.jar | grep -q "gradle-wrapper.jar"; then
+              unzip -p /tmp/gradle-plugin-${DVER}.jar "gradle-wrapper.jar" > ${WRAPPER_DIR}/gradle-wrapper.jar || true
+            else
+              # fallback: write the plugin jar as-is (may not work)
+              mv /tmp/gradle-plugin-${DVER}.jar ${WRAPPER_DIR}/gradle-wrapper.jar || true
+            fi
             # Extract supporting jars listed by the wrapper classpath
             for f in gradle-base-annotations gradle-cli gradle-files gradle-functional gradle-wrapper-shared; do
               src="gradle-${DVER}/lib/${f}-${DVER}.jar"
