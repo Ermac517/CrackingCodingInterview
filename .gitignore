@@ -25,6 +25,9 @@ hs_err_pid*
 /.gradle/
 /build/
 
+# Ignore Gradle compile temporary output
+/build/tmp/compileJava/
+
 # IntelliJ / IDEA
 /.idea/
 *.iml
