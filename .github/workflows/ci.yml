@@ -31,6 +31,33 @@ jobs:
             echo "Warning: ./gradlew not found"
           fi
 
+      - name: Ensure Gradle wrapper jars are present
+        run: |
+          set -e
+          DVER=8.6
+          DURL="https://services.gradle.org/distributions/gradle-${DVER}-bin.zip"
+          WRAPPER_DIR=gradle/wrapper
+          mkdir -p ${WRAPPER_DIR}
+          if [ -f ${WRAPPER_DIR}/gradle-wrapper.jar ]; then
+            echo "gradle-wrapper.jar already present"
+          else
+            echo "gradle-wrapper.jar missing — downloading Gradle ${DVER} distribution to extract wrapper jars"
+            curl -fSL "$DURL" -o /tmp/gradle-${DVER}.zip
+            # Extract the wrapper plugin jar as gradle-wrapper.jar
+            unzip -p /tmp/gradle-${DVER}.zip "gradle-${DVER}/lib/plugins/gradle-wrapper-${DVER}.jar" > ${WRAPPER_DIR}/gradle-wrapper.jar || true
+            # Extract supporting jars listed by the wrapper classpath
+            for f in gradle-base-annotations gradle-cli gradle-files gradle-functional gradle-wrapper-shared; do
+              src="gradle-${DVER}/lib/${f}-${DVER}.jar"
+              if unzip -l /tmp/gradle-${DVER}.zip "$src" >/dev/null 2>&1; then
+                unzip -p /tmp/gradle-${DVER}.zip "$src" > "${WRAPPER_DIR}/${f}.jar"
+                echo "extracted ${f}.jar"
+              else
+                echo "warning: $src not found in distribution"
+              fi
+            done
+            ls -la ${WRAPPER_DIR} || true
+          fi
+
       - name: Show Java and Gradle info (debuggable)
         run: |
           echo "JAVA_HOME=${JAVA_HOME}"
