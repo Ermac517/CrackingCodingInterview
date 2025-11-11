@@ -1,5 +1,5 @@
 # CrackingCodingInterview
-Coding Interview Problems from the Book
+Coding Interview Problems from the Book 6th Edition
 
 <!-- GitHub Actions status badge: uses the `CI` workflow added at `.github/workflows/ci.yml` -->
 [![CI](https://github.com/Ermac517/CrackingCodingInterview/actions/workflows/ci.yml/badge.svg)](https://github.com/Ermac517/CrackingCodingInterview/actions/workflows/ci.yml)
